@@ -45,14 +45,14 @@ def _wide(prices: pd.DataFrame, col: str) -> pd.DataFrame:
 
 def build_panel(prices: pd.DataFrame, aux: pd.DataFrame, horizons=SETTINGS.horizons) -> pd.DataFrame:
     """Long panel [date, ticker] with targets, naive forecasts and model features."""
-    o, h, l, c, v = (_wide(prices, k) for k in ["open", "high", "low", "close", "volume"])
+    o, h, lo, c, v = (_wide(prices, k) for k in ["open", "high", "low", "close", "volume"])
 
     interior_gaps = int((c.isna() & c.ffill().notna() & c.bfill().notna()).sum().sum())
     if interior_gaps:
         log.warning("%d missing bars inside asset histories", interior_gaps)
 
     ret = np.log(c).diff()
-    rv_raw = est.gk_overnight(o, h, l, c)
+    rv_raw = est.gk_overnight(o, h, lo, c)
     rv = rv_raw.apply(est.floor_variance)
     rv = rv.where(rv_raw.notna())
     overnight = est.overnight_sq(o, c)

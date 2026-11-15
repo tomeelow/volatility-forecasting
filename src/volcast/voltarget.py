@@ -61,9 +61,9 @@ def compare(
         idx = res["ret"].dropna().index
         common = idx if common is None else common.intersection(idx)
     runs = {m: res.loc[common].assign(equity=lambda d: (1 + d["ret"]).cumprod()) for m, res in runs.items()}
-    summary = pd.DataFrame(
-        {m: performance(res, None if m == UNMANAGED else cfg.target_vol) for m, res in runs.items()}
-    ).T
+    # The unmanaged portfolio is scored against the same target: it shows how far
+    # realised volatility strays when nothing is done about it.
+    summary = pd.DataFrame({m: performance(res, cfg.target_vol) for m, res in runs.items()}).T
     summary.index.name = "strategy"
     return summary, runs
 
