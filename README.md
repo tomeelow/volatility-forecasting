@@ -1,5 +1,9 @@
 # Volatility Forecasting Lab
 
+[![tests](https://github.com/tomeelow/volatility-forecasting/actions/workflows/tests.yml/badge.svg)](https://github.com/tomeelow/volatility-forecasting/actions/workflows/tests.yml)
+![python](https://img.shields.io/badge/python-3.11%20%7C%203.12%20%7C%203.13-blue)
+[![license: MIT](https://img.shields.io/badge/license-MIT-green)](LICENSE)
+
 Walk-forward volatility forecasting on **63 assets** with GARCH, HAR-RV and gradient boosting —
 evaluated with QLIKE and Diebold-Mariano tests, and put to work in a volatility-targeting backtest.
 
@@ -44,7 +48,8 @@ uv run volcast app
 Requires [uv](https://docs.astral.sh/uv/) (Python 3.11+ is installed automatically).
 
 ```bash
-git clone <this repo> && cd volatility
+git clone https://github.com/tomeelow/volatility-forecasting.git
+cd volatility-forecasting
 uv sync                 # install dependencies
 uv run volcast all      # download data, build features, forecast, evaluate, backtest (~6 min)
 uv run volcast app      # open the dashboard

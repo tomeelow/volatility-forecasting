@@ -9,6 +9,7 @@ ROOT = Path(__file__).resolve().parents[2]
 DATA_DIR = ROOT / "data"
 ARTIFACTS_DIR = ROOT / "artifacts"
 REPORTS_DIR = ROOT / "reports"
+REPO_URL = "https://github.com/tomeelow/volatility-forecasting"
 
 TRADING_DAYS = 252
 

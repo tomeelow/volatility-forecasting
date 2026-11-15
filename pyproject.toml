@@ -1,10 +1,24 @@
 [project]
 name = "volcast"
 version = "0.1.0"
-description = "Walk-forward volatility forecasting (GARCH, HAR-RV, gradient boosting) on 60+ assets with QLIKE, Diebold-Mariano tests and a volatility-targeting backtest"
+description = "Walk-forward volatility forecasting on 63 assets: GARCH, HAR-RV and LightGBM, evaluated with QLIKE and Diebold-Mariano tests, plus a volatility-targeting backtest and Streamlit dashboard"
 readme = "README.md"
 requires-python = ">=3.11,<3.14"
 license = { text = "MIT" }
+authors = [{ name = "Ivan Tomilo" }]
+keywords = [
+    "volatility", "forecasting", "garch", "har-rv", "realized-volatility", "lightgbm",
+    "walk-forward", "qlike", "diebold-mariano", "volatility-targeting", "quantitative-finance",
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Financial and Insurance Industry",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Topic :: Office/Business :: Financial :: Investment",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
 dependencies = [
     "arch>=7.0",
     "joblib>=1.3",
@@ -18,6 +32,10 @@ dependencies = [
     "streamlit>=1.36",
     "yfinance>=0.2.50",
 ]
+
+[project.urls]
+Repository = "https://github.com/tomeelow/volatility-forecasting"
+Issues = "https://github.com/tomeelow/volatility-forecasting/issues"
 
 [project.scripts]
 volcast = "volcast.cli:main"

@@ -12,7 +12,7 @@ import streamlit as st
 import theme
 
 from volcast import data, dm, evaluate, features, voltarget, walkforward
-from volcast.config import SETTINGS, TRADING_DAYS, UNIVERSE
+from volcast.config import REPO_URL, SETTINGS, TRADING_DAYS, UNIVERSE
 from volcast.metrics import loss_frame
 from volcast.models import MODEL_LABELS
 from volcast.portfolio import VolTargetConfig, rolling_vol
@@ -108,6 +108,7 @@ with st.sidebar:
         f"{forecasts['date'].min():%b %Y} – {forecasts['date'].max():%b %Y} · "
         f"models refit every {SETTINGS.refit_every} trading days on an expanding window."
     )
+    st.caption(f"[Method, results and source code on GitHub]({REPO_URL})")
 
 
 # ----------------------------------------------------------------------- charts
