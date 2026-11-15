@@ -79,7 +79,6 @@ def backtest(
 
     lam = 0.5 ** (1.0 / cfg.corr_halflife)
     cov = np.zeros((n_assets, n_assets))
-    cov_weight = 0.0
     weights = np.zeros(n_assets)          # current holdings (fractions of equity)
     out = np.full((n_days, 5), np.nan)    # ret, leverage, vol_forecast, turnover, cost
     warmup = 21 if managed else 0
@@ -93,7 +92,6 @@ def backtest(
             if weights.any():
                 weights = weights * (1.0 + r_t) / (1.0 + gross)  # holdings drift with prices
         cov = lam * cov + (1.0 - lam) * np.outer(r_t, r_t)
-        cov_weight = lam * cov_weight + (1.0 - lam)
 
         # --- decide tonight's holdings ----------------------------------------
         f_t = F[t]
