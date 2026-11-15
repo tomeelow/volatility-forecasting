@@ -123,7 +123,7 @@ def build_panel(prices: pd.DataFrame, aux: pd.DataFrame, horizons=SETTINGS.horiz
     panel.index.names = ["date", "ticker"]
     panel = panel.reset_index()
 
-    panel["dow"] = panel["date"].dt.dayofweek.astype("int8")
+    panel["dow"] = panel["date"].dt.day_of_week.astype("int8")
     classes = sorted(set(UNIVERSE.values()))
     panel["asset_class"] = panel["ticker"].map(UNIVERSE).map({k: i for i, k in enumerate(classes)}).astype("int8")
     for hz in horizons:
