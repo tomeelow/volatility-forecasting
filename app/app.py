@@ -5,17 +5,23 @@ Run with:  uv run volcast app      (or: uv run streamlit run app/app.py)
 
 from __future__ import annotations
 
+import sys
+from pathlib import Path
+
 import numpy as np
 import pandas as pd
 import plotly.graph_objects as go
 import streamlit as st
 import theme
 
-from volcast import data, dm, evaluate, features, voltarget, walkforward
-from volcast.config import REPO_URL, SETTINGS, TRADING_DAYS, UNIVERSE
-from volcast.metrics import loss_frame
-from volcast.models import MODEL_LABELS
-from volcast.portfolio import VolTargetConfig, rolling_vol
+# Hosted deployments install the dependencies but not necessarily this package.
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
+
+from volcast import bundle, dm, evaluate, voltarget  # noqa: E402
+from volcast.config import REPO_URL, SETTINGS, TRADING_DAYS, UNIVERSE  # noqa: E402
+from volcast.metrics import loss_frame  # noqa: E402
+from volcast.models import MODEL_LABELS  # noqa: E402
+from volcast.portfolio import VolTargetConfig, rolling_vol  # noqa: E402
 
 st.set_page_config(page_title="Volatility Forecasting Lab", page_icon=":material/show_chart:", layout="wide")
 
@@ -35,17 +41,12 @@ PAGES = {
 # --------------------------------------------------------------------------- data
 @st.cache_data(show_spinner="Loading forecasts…")
 def load_forecasts() -> pd.DataFrame:
-    return walkforward.load_forecasts()
+    return bundle.forecasts()
 
 
 @st.cache_data(show_spinner="Loading market data…")
 def load_market():
-    returns = data.simple_returns(data.load_prices())
-    rf = data.load_aux()["rf"]
-    panel = pd.read_parquet(features.PANEL_PATH, columns=["date", "ticker", "r2", "rv", "rv_m"])
-    calib = voltarget.calibration(panel)
-    trailing = panel.pivot(index="date", columns="ticker", values="rv_m").iloc[-1]
-    return returns, rf, calib, trailing
+    return bundle.market()
 
 
 @st.cache_data(show_spinner=False)
@@ -77,7 +78,7 @@ def show(fig: go.Figure) -> None:
     st.plotly_chart(fig, width="stretch", theme=None, config={"displayModeBar": False})
 
 
-if not walkforward.FORECASTS_PATH.exists():
+if bundle.source() is None:
     st.title("Volatility Forecasting Lab")
     st.error("No forecasts found. Run the pipeline first, then reload this page.")
     st.code("uv run volcast all", language="bash")
@@ -319,7 +320,7 @@ elif page == "Model comparison":
     st.caption("QLIKE change vs HAR, %, by calendar year of the forecast. A model that is blue in every column wins consistently, not just in one episode.")
 
     st.subheader("What the boosting model looks at")
-    imp = walkforward.load_importance()[f"h{horizon}"].sort_values().tail(12) * 100.0
+    imp = bundle.importance()[f"h{horizon}"].sort_values().tail(12) * 100.0
     fig = go.Figure(go.Bar(
         x=imp.to_numpy(), y=list(imp.index), orientation="h", width=0.55,
         marker={"color": theme.tokens()["blue"], "cornerradius": 4},
@@ -453,7 +454,7 @@ else:
     vol_cols = [c for c in out.columns if c.startswith(("Realised", "Forecast, "))]
     st.caption(
         f"Annualised volatility, %, forecast at the close of {forecasts['date'].max():%d %b %Y}. "
-        "Refresh with `uv run volcast all --force`."
+        "Volatility is annualised from daily variance with 252 trading days."
     )
     st.dataframe(
         out.style.format({**{c: "{:.1f}" for c in vol_cols}, "Forecast vs realised": "{:+.0%}"}),

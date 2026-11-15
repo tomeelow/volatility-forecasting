@@ -3,6 +3,7 @@
 [![tests](https://github.com/tomeelow/volatility-forecasting/actions/workflows/tests.yml/badge.svg)](https://github.com/tomeelow/volatility-forecasting/actions/workflows/tests.yml)
 ![python](https://img.shields.io/badge/python-3.11%20%7C%203.12%20%7C%203.13-blue)
 [![license: MIT](https://img.shields.io/badge/license-MIT-green)](LICENSE)
+[![Open in Streamlit](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://volatility-forecasting.streamlit.app)
 
 Walk-forward volatility forecasting on **63 assets** with GARCH, HAR-RV and gradient boosting —
 evaluated with QLIKE and Diebold-Mariano tests, and put to work in a volatility-targeting backtest.
@@ -26,8 +27,10 @@ and what that is worth in a portfolio — with a test design in which no forecas
 
 ## Dashboard
 
+**Live demo: [volatility-forecasting.streamlit.app](https://volatility-forecasting.streamlit.app)** — nothing to install.
+
 An interactive Streamlit app to explore every forecast, re-run the model comparison on any
-slice of assets and years, and play with the volatility-targeting parameters.
+slice of assets and years, and play with the volatility-targeting parameters. To run it locally:
 
 ```bash
 uv run volcast app
@@ -51,10 +54,13 @@ Requires [uv](https://docs.astral.sh/uv/) (Python 3.11+ is installed automatical
 git clone https://github.com/tomeelow/volatility-forecasting.git
 cd volatility-forecasting
 uv sync                 # install dependencies
-uv run volcast all      # download data, build features, forecast, evaluate, backtest (~6 min)
-uv run volcast app      # open the dashboard
-uv run pytest           # 26 tests, including look-ahead checks
+uv run volcast app      # open the dashboard on the committed results
+uv run volcast all      # re-run everything: download, features, forecast, evaluate, backtest (~6 min)
+uv run pytest           # 32 tests, including look-ahead checks
 ```
+
+The dashboard works straight after cloning: it reads a compact snapshot of the results from
+`app/data/` (data to 13 Nov 2026). Once you run the pipeline yourself it uses your fresh output instead.
 
 Individual steps: `volcast download | features | forecast | evaluate | backtest | figures`.
 Data comes from Yahoo Finance and is cached in `data/`; pass `--force` to refresh it.
@@ -239,6 +245,18 @@ forecasts with an EWMA correlation matrix. The backtest tracks drifting weights 
 charges costs on turnover and finances leverage at the T-bill rate. Forecasts are rescaled from the
 range-based proxy to close-to-close variance using a past-only ratio.
 
+## Hosting
+
+The live demo runs on Streamlit Community Cloud straight from this repository (`app/app.py`).
+
+- **Data.** A hosted app cannot run the pipeline, so `volcast bundle` exports what the dashboard
+  reads — forecasts, realised variance and daily returns, about 28 MB — to `app/data/`. To publish
+  newer results: `uv run volcast all --force && uv run volcast bundle`, then commit and push.
+- **Always on.** Community Cloud puts an app to sleep after 12 hours without a visitor. The
+  [`keepalive`](.github/workflows/keepalive.yml) workflow opens the dashboard in a headless browser
+  every 4 hours and wakes it if needed, so the link loads instantly. It reads the address from the
+  repository variable `APP_URL`.
+
 ## Limitations
 
 - **Daily bars, not intraday.** The variance proxy is noisier than a 5-minute realized variance, which
@@ -269,8 +287,10 @@ src/volcast/
   portfolio.py     volatility-targeting backtest
   voltarget.py     backtest inputs and reference runs
   figures.py       static charts
+  bundle.py        compact data export for the hosted dashboard
   cli.py           `volcast` command
-app/               Streamlit dashboard
+app/               Streamlit dashboard (app/data: committed results snapshot)
+scripts/           keep-awake visit for the hosted dashboard
 tests/             unit tests and dashboard smoke tests
 reports/           result tables (CSV) and figures
 ```

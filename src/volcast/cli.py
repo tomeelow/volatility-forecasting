@@ -7,6 +7,7 @@
     volcast backtest    volatility-targeting backtest
     volcast figures     static charts for the README
     volcast all         everything above, in order
+    volcast bundle      export the compact data files the hosted dashboard reads
     volcast app         launch the Streamlit dashboard
 """
 
@@ -43,11 +44,15 @@ def _run_step(step: str, force: bool) -> None:
         from . import figures
 
         figures.make_all()
+    elif step == "bundle":
+        from . import bundle
+
+        bundle.export()
 
 
 def main(argv: list[str] | None = None) -> None:
     parser = argparse.ArgumentParser(prog="volcast", description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument("step", choices=[*STEPS, "all", "app"])
+    parser.add_argument("step", choices=[*STEPS, "all", "bundle", "app"])
     parser.add_argument("--force", action="store_true", help="re-download data even if cached")
     args = parser.parse_args(argv)
 

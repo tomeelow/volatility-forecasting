@@ -1,0 +1,26 @@
+name: keep dashboard awake
+
+# Streamlit Community Cloud puts an app to sleep after 12 hours without a
+# visitor. This opens the hosted dashboard in a browser every 4 hours (and
+# wakes it if it is already asleep), so the public link always loads instantly.
+#
+# The address comes from the repository variable APP_URL; the job is skipped
+# until that variable is set:   gh variable set APP_URL --body https://<name>.streamlit.app
+
+on:
+  schedule:
+    - cron: "23 */4 * * *"
+  workflow_dispatch:
+
+jobs:
+  visit:
+    if: vars.APP_URL != ''
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      APP_URL: ${{ vars.APP_URL }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+      - run: uv run --no-project --with playwright playwright install --with-deps chromium
+      - run: uv run --no-project --with playwright python scripts/keepalive.py
