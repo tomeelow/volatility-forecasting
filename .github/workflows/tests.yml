@@ -1,0 +1,17 @@
+name: tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+      - run: uv sync
+      - run: uv run ruff check src tests app
+      # Unit tests use synthetic data; dashboard smoke tests skip without pipeline artifacts.
+      - run: uv run pytest
