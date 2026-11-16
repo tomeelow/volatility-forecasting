@@ -3,7 +3,7 @@
 [![tests](https://github.com/tomeelow/volatility-forecasting/actions/workflows/tests.yml/badge.svg)](https://github.com/tomeelow/volatility-forecasting/actions/workflows/tests.yml)
 ![python](https://img.shields.io/badge/python-3.11%20%7C%203.12%20%7C%203.13-blue)
 [![license: MIT](https://img.shields.io/badge/license-MIT-green)](LICENSE)
-[![Open in Streamlit](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://volatility-forecasting.streamlit.app)
+[![Open in Streamlit](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://tomeelow-volatility-forecasting-appapp-pogiqr.streamlit.app)
 
 Walk-forward volatility forecasting on **63 assets** with GARCH, HAR-RV and gradient boosting —
 evaluated with QLIKE and Diebold-Mariano tests, and put to work in a volatility-targeting backtest.
@@ -27,7 +27,7 @@ and what that is worth in a portfolio — with a test design in which no forecas
 
 ## Dashboard
 
-**Live demo: [volatility-forecasting.streamlit.app](https://volatility-forecasting.streamlit.app)** — nothing to install.
+**Live demo: [Open the dashboard](https://tomeelow-volatility-forecasting-appapp-pogiqr.streamlit.app)** — nothing to install.
 
 An interactive Streamlit app to explore every forecast, re-run the model comparison on any
 slice of assets and years, and play with the volatility-targeting parameters. To run it locally:

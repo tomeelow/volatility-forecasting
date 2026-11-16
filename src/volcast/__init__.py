@@ -5,7 +5,7 @@ LightGBM and an ensemble) forecast the variance of 63 assets out of sample; the
 forecasts are scored with QLIKE and Diebold-Mariano tests and used to run a
 volatility-targeted portfolio.
 
-Live dashboard: https://volatility-forecasting.streamlit.app
+Live dashboard: https://tomeelow-volatility-forecasting-appapp-pogiqr.streamlit.app
 Source: https://github.com/tomeelow/volatility-forecasting
 """
 

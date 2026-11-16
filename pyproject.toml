@@ -34,7 +34,7 @@ dependencies = [
 ]
 
 [project.urls]
-Demo = "https://volatility-forecasting.streamlit.app"
+Demo = "https://tomeelow-volatility-forecasting-appapp-pogiqr.streamlit.app"
 Repository = "https://github.com/tomeelow/volatility-forecasting"
 Issues = "https://github.com/tomeelow/volatility-forecasting/issues"
 
